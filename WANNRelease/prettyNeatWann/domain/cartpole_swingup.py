@@ -58,7 +58,16 @@ class CartPoleSwingUpEnv(gym.Env):
         self.viewer = None
         self.state = None
 
+        self.weight = None
+
         self.noise = 0
+
+    def set_weight(self, weight):
+        '''
+        Set the weight self.weight to weight and make that weight useful in the calculation of reward.
+        '''
+        # self.weight = weight
+        raise NotImplementedError
 
     def setEnv(self, envChange):
         '''
