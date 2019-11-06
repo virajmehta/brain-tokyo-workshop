@@ -83,11 +83,12 @@ class WannGymTask(GymTask):
     reward = np.empty((nRep,nVals))
     for iRep in range(nRep):
       for iVal in range(nVals):
-        wMat = self.setWeights(wVec,wVals[iVal])
+        weight = wVals[iVal]
+        wMat = self.setWeights(wVec,weight)
         if seed == -1:
-          reward[iRep,iVal] = self.testInd(wMat, aVec, seed=seed,view=view)
+          reward[iRep,iVal] = self.testInd(wMat, aVec, weight=weight, seed=seed,view=view)
         else:
-          reward[iRep,iVal] = self.testInd(wMat, aVec, seed=seed+iRep,view=view)
+          reward[iRep,iVal] = self.testInd(wMat, aVec, weight=weight, seed=seed+iRep,view=view)
           
     if returnVals is True:
       return np.mean(reward,axis=0), wVals

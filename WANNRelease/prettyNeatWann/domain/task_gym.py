@@ -64,7 +64,7 @@ class GymTask():
     fitness = np.mean(reward)
     return fitness
 
-  def testInd(self, wVec, aVec, hyp=None, view=False,seed=-1):
+  def testInd(self, wVec, aVec, weight=None, hyp=None, view=False,seed=-1):
     """Evaluate individual on task
     Args:
       wVec    - (np_array) - weight matrix as a flattened vector
@@ -85,6 +85,8 @@ class GymTask():
       self.env.seed(seed)
 
     state = self.env.reset()
+    if weight is not None:
+        self.env.set_weight(weight)
     self.env.t = 0
     annOut = act(wVec, aVec, self.nInput, self.nOutput, state)  
     action = selectAct(annOut,self.actSelect)    
