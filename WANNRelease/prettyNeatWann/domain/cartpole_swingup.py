@@ -66,7 +66,7 @@ class CartPoleSwingUpEnv(gym.Env):
         '''
         Set the weight self.weight to weight and make that weight useful in the calculation of reward.
         '''
-        # self.weight = weight
+        self.weight = weight
         raise NotImplementedError
 
     def setEnv(self, envChange):
@@ -101,13 +101,14 @@ class CartPoleSwingUpEnv(gym.Env):
         theta = theta + theta_dot*self.dt
 
         x_dot = x_dot + xdot_update*self.dt
-        theta_dot = theta_dot + thetadot_update*self.dt  
+        theta_dot = theta_dot + thetadot_update*self.dt
 
         return (x, x_dot, theta, theta_dot)
 
     def step(self, action):
         # Valid action
         action = np.clip(action, -1.0, 1.0)[0]
+        clipped_action = action
         action *= self.force_mag
 
         noise_obs = self.stateUpdate(action, self.state, noise=self.noise)
@@ -128,8 +129,11 @@ class CartPoleSwingUpEnv(gym.Env):
         reward_theta = (np.cos(theta)+1.0)/2.0
         reward_x = np.cos((x/self.x_threshold)*(np.pi/2.0))
 
-        reward = reward_theta*reward_x
+        prob_reward = reward_theta*reward_x
         #reward = (np.cos(theta)+1.0)/2.0
+        # reward for cartpole swingup
+        action_reward = 1 - clipped_action ** 2
+        reward = prob_reward + ((self.weight + 2) / 4 * action_reward)
 
         x,x_dot,theta,theta_dot = noise_obs
         obs = np.array([x,x_dot,np.cos(theta),np.sin(theta),theta_dot])
