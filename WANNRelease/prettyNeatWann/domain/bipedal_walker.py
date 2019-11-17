@@ -120,6 +120,7 @@ class BipedalWalker(gym.Env):
         self.world = Box2D.b2World()
         self.terrain = None
         self.hull = None
+        self.weight = None
 
         self.prev_shaping = None
 
@@ -146,6 +147,9 @@ class BipedalWalker(gym.Env):
         self.observation_space = spaces.Box(-high, high)
 
         self.timer = 0
+
+    def set_weight(self, weight):
+        self.weight = weight
 
     def seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)
@@ -436,13 +440,24 @@ class BipedalWalker(gym.Env):
         shaping -= 5.0*abs(state[0])  # keep head straight, other than that and falling, any behavior is unpunished
 
         reward = 0
+
+        # reward smaller motor actuations (there's 4 of them)
+        # (idea, anyways)
+        # action_reward = 1 -  0.25 * np.linalg.norm(np.clip(action, -1, 1))
+
         if self.prev_shaping is not None:
             reward = shaping - self.prev_shaping
         self.prev_shaping = shaping
 
+        action_reward = 0
         for a in action:
-            reward -= 0.00035 * MOTORS_TORQUE * np.clip(np.abs(a), 0, 1)
+            # they already account for torque here;
+            # larger values reduce the reward?
+            action_reward -= 0.00035 * MOTORS_TORQUE * np.clip(np.abs(a), 0, 1)
             # normalized to about -50.0 using heuristic, more optimal agent should spend less
+
+        # presumably due to the max abs(weight) being 4?
+        reward += ((self.weight + 2)) / 4. * action_reward
 
         done = False
         if self.game_over or pos[0] < 0:
