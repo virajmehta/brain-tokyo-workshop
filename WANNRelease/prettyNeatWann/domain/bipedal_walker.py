@@ -456,8 +456,13 @@ class BipedalWalker(gym.Env):
             action_reward -= 0.00035 * MOTORS_TORQUE * np.clip(np.abs(a), 0, 1)
             # normalized to about -50.0 using heuristic, more optimal agent should spend less
 
+        if self.weight is None:
+            w = 1.0
+            print('WARNING: Weight not set')
+        else:
+            w = self.weight
         # presumably due to the max abs(weight) being 4?
-        reward += ((self.weight + 2)) / 4. * action_reward
+        reward += ((w + 2)) / 4. * action_reward
 
         done = False
         if self.game_over or pos[0] < 0:
