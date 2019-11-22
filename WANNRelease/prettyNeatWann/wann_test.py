@@ -37,11 +37,11 @@ def main(argv):
   wVec, aVec, wKey = importNet(infile)
 
   # Show result
-  fitness, wVals = task.getFitness(wVec, aVec, hyp,
+  fitness, wVals, impulse = task.getFitness(wVec, aVec, hyp,
                                 nVals=nMean, nRep=nRep,\
-                                view=view,returnVals=True, seed=seed)      
+                                view=view, returnVals=True, seed=seed)      
 
-  print("[***]\tFitness:", fitness , '\n' + "[***]\tWeight Values:\t" , wVals) 
+  print("[***]\tFitness:", fitness , '\n' + "[***]\tAvg. Impulses:\t" , impulse, '\n' + "[***]\tWeight Values:\t" , wVals) 
   lsave(outPref+'reward.out',fitness)
   lsave(outPref+'wVals.out',wVals)
   
