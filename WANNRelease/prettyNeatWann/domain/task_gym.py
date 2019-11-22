@@ -60,7 +60,7 @@ class GymTask():
     for iRep in range(nRep):
       if seed > 0:
         seed = seed+iRep
-      reward[iRep] = self.testInd(wVec, aVec, view=view, seed=seed)
+      reward[iRep] = self.testInd(wVec, aVec, view=view, seed=seed)[0]
     fitness = np.mean(reward)
     return fitness
 
@@ -101,11 +101,13 @@ class GymTask():
       return reward
     else:
       totalReward = reward
+      allActions = [action]
     
     for tStep in range(self.maxEpisodeLength): 
       annOut = act(wVec, aVec, self.nInput, self.nOutput, state) 
       action = selectAct(annOut,self.actSelect) 
       state, reward, done, info = self.env.step(action)
+      allActions.append(action)
       totalReward += reward  
       if view:
         if self.needsClosed:
@@ -114,4 +116,4 @@ class GymTask():
           self.env.render()
       if done:
         break
-    return totalReward
+    return totalReward, allActions
