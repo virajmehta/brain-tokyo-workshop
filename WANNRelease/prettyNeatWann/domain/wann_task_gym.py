@@ -92,11 +92,10 @@ class WannGymTask(GymTask):
         else:
           tInd = self.testInd(wMat, aVec, weight=weight, seed=seed+iRep,view=view)
           reward[iRep,iVal] = tInd[0]
-        impulse[iRep, iVal] = np.sum(np.linalg.norm(np.array(tInd[1]), axis=1))
+        impulse[iRep, iVal] = np.mean(np.sum(tInd[1], axis=1)) #np.sum(np.linalg.norm(np.array(tInd[1]), axis=1))
           
-    print(np.mean(impulse, axis=0))
     if returnVals is True:
-      return np.mean(reward,axis=0), wVals
+      return np.mean(reward,axis=0), wVals, np.mean(impulse, axis=0)
     return np.mean(reward,axis=0)
  
 
