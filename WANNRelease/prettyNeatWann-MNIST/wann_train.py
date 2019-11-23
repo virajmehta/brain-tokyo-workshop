@@ -17,10 +17,8 @@ from neat_src import * # NEAT and WANNs
 from domain import *   # Task environments
 
 def count_conns(pop):
-	conns = 0.0
-	for i in range(len(pop)):
-		conns += pop[i].nConn
-	return conns/len(pop)
+	conns = pop.nConn
+	return conns
 # -- Run NEAT ------------------------------------------------------------ -- #
 def master(): 
   """Main NEAT optimization script
@@ -33,12 +31,12 @@ def master():
     pop = alg.ask()            # Get newly evolved individuals from NEAT  
     reward = batchMpiEval(pop)  # Send pop to be evaluated by workers
     alg.tell(reward)           # Send fitness to NEAT    
-    conns = count_conns(pop)
     data = gatherData(data,alg,gen,hyp)
     wVec   = data.best[gen].wMat.flatten()
-    aVec   = data.best[gen].aVec.flatten()
+    aVec   = data.best[gen].aVec.flatten() 
+    conns = count_conns(data.best[gen])
     test_reward = task_test.getFitness(wVec,aVec,hyp_test)
-    print(gen, '\t', "avg_conn\t", conns, '\t',  data.display())
+    print(gen, '\t', "best_conn\t", conns, '\t',  data.display())
     print(gen, '\t', "test_rwd\t", test_reward)  
   # Clean up and data gathering at run end
   data = gatherData(data,alg,gen,hyp,savePop=True)
