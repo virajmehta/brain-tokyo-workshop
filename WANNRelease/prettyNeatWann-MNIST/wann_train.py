@@ -28,7 +28,7 @@ def master():
   global fileName, hyp, hyp_test
   data = WannDataGatherer(fileName, hyp)
   alg  = Wann(hyp)
-  task_test = WannGymTask(games[hyp_test['task']], nReps=hyp['alg_nReps'])
+  task_test = WannGymTask(games[hyp_test['task']], nReps=hyp_test['alg_nReps'])
   for gen in range(hyp['maxGen']):        
     pop = alg.ask()            # Get newly evolved individuals from NEAT  
     reward = batchMpiEval(pop)  # Send pop to be evaluated by workers
@@ -251,13 +251,13 @@ def main(argv):
   fileName    = args.outPrefix
   hyp_default = args.default
   hyp_adjust  = args.hyperparam
-  hyp_test = args.test
+  hyp_t = args.test
 
   hyp = loadHyp(pFileName=hyp_default)
   updateHyp(hyp,hyp_adjust)
   
-  hyp_2 = loadHyp(pFileName=hyp_default)
-  updateHyp(hyp_2, hyp_test)
+  hyp_test = loadHyp(pFileName=hyp_default)
+  updateHyp(hyp_test, hyp_t)
   # Launch main thread and workers
   if (rank == 0):
     master()
