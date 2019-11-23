@@ -13,6 +13,7 @@ np.set_printoptions(linewidth=160)
 
 from neat_src import * # NEAT and WANNs
 from domain import *   # Task environments
+import matplotlib.pyplot as plt
 
 def main(argv):
   infile  = args.infile
@@ -37,11 +38,33 @@ def main(argv):
   wVec, aVec, wKey = importNet(infile)
 
   # Show result
-  fitness, wVals = task.getFitness(wVec, aVec, hyp,
+  fitness, wVals, impulses = task.getFitness(wVec, aVec, hyp,
                                 nVals=nMean, nRep=nRep,\
-                                view=view,returnVals=True, seed=seed)      
+                                view=view, returnVals=True, seed=seed)      
 
-  print("[***]\tFitness:", fitness , '\n' + "[***]\tWeight Values:\t" , wVals) 
+  name = hyp_adjust.split('/')[-1].split('.')[0]
+  Name = name[0].upper() + name[1:]
+  weights = wVals
+
+  plt.rcParams["figure.figsize"] = (5, 3)
+  fig, ax1 = plt.subplots()
+  color = 'tab:blue'
+  ax1.set_xticks(weights)
+  ax1.set_xlabel(r"$\bf{Weight}$")
+  ax1.set_ylabel(r"$\bf{Fitness}$", color=color)
+  ax1.plot(weights, fitness, marker="o", markersize=4, color=color)
+  ax1.tick_params(axis='y', labelcolor=color)
+  ax2 = ax1.twinx()
+  color = 'tab:orange'
+  ax2.set_ylabel(r"$\bf{Avg.\ Impulse}$", color=color)
+  ax2.plot(weights, impulses, marker="o", markersize=4, color=color)
+  ax2.tick_params(axis='y', labelcolor=color)
+  fig.tight_layout()
+  plt.subplots_adjust(top=0.9)
+  plt.title(r"$\bf{" + Name + "}$ Fitness/Impulse Trade-off")
+  plt.savefig(name + '.pdf')
+
+  print("[***]\tFitness:", fitness , '\n' + "[***]\tAvg. Impulses:\t" , impulses, '\n' + "[***]\tWeight Values:\t" , wVals) 
   lsave(outPref+'reward.out',fitness)
   lsave(outPref+'wVals.out',wVals)
   
