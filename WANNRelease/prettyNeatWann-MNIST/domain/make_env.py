@@ -39,11 +39,11 @@ def make_env(env_name, seed=-1, render_mode=False):
     if env_name.endswith("mnist256train"):
       from domain.classify_gym import mnist_256
       trainSet, target  = mnist_256()
-      env = ClassifyEnv(trainSet, target, batch_size=60000, accuracy_mode=True)
+      env = ClassifyEnv(trainSet, target, batch_size=1000, accuracy_mode=True)
     if env_name.endswith("mnist256test"):
       from domain.classify_gym import mnist_256_test
       test_images, test_labels  = mnist_256_test()
-      env = ClassifyEnv(test_images, test_labels, batch_size=10000, accuracy_mode=True)
+      env = ClassifyEnv(test_images, test_labels, batch_size=1000, accuracy_mode=True)
 
   # -- Cart Pole Swing up -------------------------------------------- -- #
   elif (env_name.startswith("CartPoleSwingUp")):
