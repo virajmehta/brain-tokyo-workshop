@@ -449,6 +449,7 @@ class BipedalWalker(gym.Env):
             reward = shaping - self.prev_shaping
         self.prev_shaping = shaping
 
+        prob_reward = reward
         action_reward = 0
         for a in action:
             # they already account for torque here;
@@ -481,7 +482,7 @@ class BipedalWalker(gym.Env):
 
         self.timer += 1
 
-        return np.array(state), reward, done, {}
+        return np.array(state), reward, done, {}, prob_reward
 
     def render(self, mode='human', close=False):
         if close:

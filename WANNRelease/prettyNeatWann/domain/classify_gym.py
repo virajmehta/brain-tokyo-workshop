@@ -67,6 +67,7 @@ class ClassifyEnv(gym.Env):
     log_likelihood = -np.log(action[range(m),y])
     loss = np.sum(log_likelihood) / m
     reward = -loss
+    prob_reward = reward
 
     if self.t_limit > 0: # We are doing batches
       reward *= (1/self.t_limit) # average
@@ -82,7 +83,7 @@ class ClassifyEnv(gym.Env):
       done = True
 
     obs = self.state
-    return obs, reward, done, {}
+    return obs, reward, done, {}, prob_reward
 
 
 # -- Data Sets ----------------------------------------------------------- -- #

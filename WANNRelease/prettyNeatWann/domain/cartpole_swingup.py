@@ -137,7 +137,7 @@ class CartPoleSwingUpEnv(gym.Env):
         x,x_dot,theta,theta_dot = noise_obs
         obs = np.array([x,x_dot,np.cos(theta),np.sin(theta),theta_dot])
 
-        return obs, reward, done, {}
+        return obs, reward, done, {}, prob_reward
 
     def reset(self):
         #self.state = self.np_random.normal(loc=np.array([0.0, 0.0, 30*(2*np.pi)/360, 0.0]), scale=np.array([0.0, 0.0, 0.0, 0.0]))
