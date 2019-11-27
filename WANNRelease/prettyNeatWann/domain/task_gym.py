@@ -90,7 +90,7 @@ class GymTask():
     self.env.t = 0
     annOut = act(wVec, aVec, self.nInput, self.nOutput, state)  
     action = selectAct(annOut,self.actSelect)    
-    state, reward, done, info = self.env.step(action)
+    state, reward, done, info, preward = self.env.step(action)
     
     if self.maxEpisodeLength == 0:
       if view:
@@ -100,15 +100,15 @@ class GymTask():
           self.env.render()
       return reward
     else:
-      totalReward = reward
+      totalReward = preward
       allActions = [action]
     
     for tStep in range(self.maxEpisodeLength): 
       annOut = act(wVec, aVec, self.nInput, self.nOutput, state) 
       action = selectAct(annOut,self.actSelect) 
-      state, reward, done, info = self.env.step(action)
+      state, reward, done, info, preward = self.env.step(action)
       allActions.append(action)
-      totalReward += reward  
+      totalReward += preward  
       if view:
         if self.needsClosed:
           self.env.render(close=done)  
